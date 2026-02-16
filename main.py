@@ -1,7 +1,10 @@
 import pandas as pd
 import logging
 
-logging.basicConfig(level=logging.INFO)
+from src.config.logging_config import setup_logging
+
+setup_logging()
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -42,16 +45,10 @@ def main():
 
     df_long.to_excel(output_path, index=False)
 
-    print("フォーマット完了:", output_path)
+    logger.info("フォーマット完了: %s", output_path)
 
 
 def normalize_daily_result(series: pd.Series) -> pd.Series:
-    """
-    日付実績の正規化
-    - 前後空白除去
-    - 記号・ステータスをルールに従って正規化
-    - NULL許容の整数型(Int64)に変換
-    """
     s = series.astype(str).str.strip()
 
     s = s.replace({"": pd.NA, "nan": pd.NA})
