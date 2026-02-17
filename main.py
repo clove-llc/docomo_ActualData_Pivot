@@ -15,7 +15,6 @@ def main() -> None:
 
     logger.info("実績データ更新処理を開始します。")
     run_venue_performance_pipeline(project_id=project_id, blob_name=event_actual_blob)
-
     logger.info("実績データ更新処理が完了しました。")
 
 

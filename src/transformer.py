@@ -75,7 +75,7 @@ class EventActualTransformer:
         df = df.rename(columns=self.COLUMN_MAPPING)
 
         return (
-            df.dropna(subset=["no"])
+            df.dropna(subset=["daily_result_raw"])
             .assign(daily_result=self._normalize_daily_result(df["daily_result_raw"]))
             .sort_values(by=["date", "facility_name"])
             .reset_index(drop=True)

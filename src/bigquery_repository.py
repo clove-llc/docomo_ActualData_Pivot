@@ -7,8 +7,8 @@ from google.cloud import bigquery
 logger = logging.getLogger(__name__)
 
 
-class BqVenuePerformanceRepository:
-    DATA_SET = "docomo_event_actual_test"
+class BigQueryRepository:
+    DATA_SET = "docomo_eventActual"
 
     TABLE_SCHEMA = [
         bigquery.SchemaField("datasource", "STRING"),
@@ -44,58 +44,62 @@ class BqVenuePerformanceRepository:
 
     def __init__(self, client: bigquery.Client):
         self._client = client
-        self._table_id = f"{client.project}.{self.DATA_SET}.venue_performance"
 
-    def _align_dataframe_types(self, df: pd.DataFrame) -> pd.DataFrame:
-        schema_map = {field.name: field.field_type for field in self.TABLE_SCHEMA}
+    def _get_full_table_id(self, table_id: str) -> str:
+        return f"{self._client.project}.{self.DATA_SET}.{table_id}"
 
-        for col, field_type in schema_map.items():
-            if col not in df.columns:
-                continue
-
-            if field_type == "STRING":
-                df[col] = df[col].astype("string")
-
-            elif field_type == "INTEGER":
-                df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
-
-            elif field_type == "BOOLEAN":
-                df[col] = df[col].astype("boolean")
-
-            elif field_type == "DATE":
-                df[col] = pd.to_datetime(df[col], errors="coerce").dt.date
-
-        return df
-
-    def save(
-        self,
-        df: pd.DataFrame,
-        write_disposition: str = bigquery.WriteDisposition.WRITE_TRUNCATE,
-    ) -> None:
-
-        logger.info("BigQueryへデータロード開始: %s", self._table_id)
-
-        # 足りない列を補完
+    def _add_missing_columns(self, df: pd.DataFrame) -> None:
         for field in self.TABLE_SCHEMA:
             if field.name not in df.columns:
                 df[field.name] = None
 
+    def _align_dataframe_types(self, df: pd.DataFrame) -> pd.DataFrame:
+        schema_map = {field.name: field.field_type for field in self.TABLE_SCHEMA}
+
+        for field_name, field_type in schema_map.items():
+            if field_name not in df.columns:
+                continue
+
+            if field_type == "STRING":
+                df[field_name] = df[field_name].astype("string")
+
+            elif field_type == "INTEGER":
+                df[field_name] = pd.to_numeric(df[field_name], errors="coerce").astype(
+                    "Int64"
+                )
+
+            elif field_type == "BOOLEAN":
+                df[field_name] = df[field_name].astype("boolean")
+
+            elif field_type == "DATE":
+                df[field_name] = pd.to_datetime(df[field_name], errors="coerce").dt.date
+
+        return df
+
+    def save_venue_performance(self, df: pd.DataFrame) -> None:
+        full_table_id = self._get_full_table_id("venue_performance")
+
+        logger.info("BigQueryへデータロードを開始します: %s", full_table_id)
+
+        self._add_missing_columns(df)
+
         df = self._align_dataframe_types(df)
 
+        # テーブルの列順を整える
         df = df[[field.name for field in self.TABLE_SCHEMA]]
 
         job_config = bigquery.LoadJobConfig(
-            write_disposition=write_disposition,
+            write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
             schema=self.TABLE_SCHEMA,
             autodetect=False,
         )
 
         job = self._client.load_table_from_dataframe(
             df,
-            self._table_id,
+            full_table_id,
             job_config=job_config,
         )
 
         job.result()
 
-        logger.info("BigQueryロード完了: %s", self._table_id)
+        logger.info("BigQueryへのデータロード完了: %s", full_table_id)
