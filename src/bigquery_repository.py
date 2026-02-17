@@ -103,3 +103,11 @@ class BigQueryRepository:
         job.result()
 
         logger.info("BigQueryへのデータロード完了: %s", full_table_id)
+
+    def execute_query(self, query: str) -> None:
+        logger.info("BigQueryクエリ実行開始")
+
+        job = self._client.query(query)
+        job.result()
+
+        logger.info("BigQueryクエリ実行完了")
