@@ -1,6 +1,7 @@
 from google.cloud import storage
 
-class GoogleCloudStorageClient:
+
+class CloudStorageClient:
     def __init__(
         self,
         gcp_project_id: str,
