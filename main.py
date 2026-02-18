@@ -35,6 +35,7 @@ def main() -> None:
         "event_decile_benchmark.sql",
         "facility_event_planning_snapshot.sql",
         "facility_special_event_planning_summary.sql",
+        "facility_performance_slots_2026_2027.sql",
     ]
 
     refresh_derived_tables(DERIVED_TABLE_SQL_FILES, bigquery_repository)
