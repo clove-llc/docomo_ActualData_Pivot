@@ -25,3 +25,5 @@ steps:
       - us-central1-docker.pkg.dev/$PROJECT_ID/docomo-jobs/docomo-event-actual-pipeline:$BUILD_ID
       - --region
       - us-central1
+      - --set-env-vars
+      - PROJECT_ID=$PROJECT_ID,EVENT_ACTUAL_BLOB=event_actuals_row.xlsx
