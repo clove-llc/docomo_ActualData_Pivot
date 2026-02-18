@@ -15,7 +15,7 @@ WITH stats_summary AS (
         e_d_b.branch_office,
         CONCAT(CAST(e_d_b.month AS STRING), '月') AS month,
         '第' || CAST(e_d_b.week_number_monthly AS STRING) || '週' AS week_number_monthly,
-        e_d_b.event_type AS `日付種別`,
+        e_d_b.event_type,
         f_e_d_m_a.max_actual AS daily_actual,
         s_s.latest_actual,
         e_d_b.decile_rank,
