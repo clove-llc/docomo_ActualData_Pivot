@@ -10,6 +10,8 @@ def get_settings():
 
     app_env = os.getenv("APP_ENV")
     project_id = os.getenv("PROJECT_ID")
+
+    facility_master_sheet_id = os.getenv("FACILITY_MASTER_SHEET_ID")
     event_actual_sheet_id = os.getenv("EVENT_ACTUAL_SHEET_ID")
 
     if not app_env:
@@ -18,7 +20,15 @@ def get_settings():
     if not project_id:
         raise ValueError("環境変数 PROJECT_ID が設定されていません。")
 
+    if not facility_master_sheet_id:
+        raise ValueError("環境変数 FACILITY_MASTER_SHEET_ID が設定されていません。")
+
     if not event_actual_sheet_id:
         raise ValueError("環境変数 EVENT_ACTUAL_SHEET_ID が設定されていません。")
 
-    return project_id, event_actual_sheet_id, app_env
+    return (
+        app_env,
+        project_id,
+        facility_master_sheet_id,
+        event_actual_sheet_id,
+    )

@@ -17,7 +17,12 @@ logger = logging.getLogger(__name__)
 
 
 def main() -> None:
-    project_id, event_actual_sheet_id, app_env = get_settings()
+    (
+        app_env,
+        project_id,
+        facility_master_sheet_id,
+        event_actual_sheet_id,
+    ) = get_settings()
 
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets.readonly",
