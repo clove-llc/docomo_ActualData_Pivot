@@ -53,4 +53,3 @@ class BaseTransformer(ABC):
         Google Sheetsから取得したデータを整形し、
         BigQueryにロード可能なDataFrameを返す。
         """
-        pass
