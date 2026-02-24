@@ -11,11 +11,14 @@ class GoogleSpreadSheetsRepository:
         self._client = client
 
     def fetch_spreadsheets(self, spreadsheet_id: str) -> dict[str, pd.DataFrame]:
-        logger.info("Googleスプレッドシートを取得します: %s", spreadsheet_id)
+        logger.info(
+            "Googleスプレッドシートからデータを取得します: %s",
+            f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}",
+        )
 
         spreadsheet = self._client.open_by_key(spreadsheet_id)
 
-        logger.info("取得完了。")
+        logger.info("Googleスプレッドシートからデータの取得完了。")
 
         worksheets = spreadsheet.worksheets()
 
