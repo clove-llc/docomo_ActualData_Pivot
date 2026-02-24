@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 logger = logging.getLogger(__name__)
 
 DIMENSION_TABLE_SQL_FILES = [
-    "facility_event_decile_master",
-    "facility_monthly_weekday_dateflag_deviation_zscore",
-    "facility_monthly_dateflag_deviation_zscore",
+    "facility_event_decile_master.sql",
+    "facility_monthly_weekday_dateflag_deviation_zscore.sql",
+    "facility_monthly_dateflag_deviation_zscore.sql",
 ]
 
 FACT_TABLE_SQL_FILES = [
