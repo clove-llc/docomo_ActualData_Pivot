@@ -1,4 +1,4 @@
-CREATE OR REPLACE TABLE `{project_id}.docomo_event_actual_2026.facility_performance_slots_2026_2027` AS
+CREATE OR REPLACE TABLE `{project_id}.docomo_eventActual.facility_performance_slots_2026_2027` AS
 
 WITH facility_event_planning_snapshot_monthly AS (
     SELECT
